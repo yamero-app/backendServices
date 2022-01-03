@@ -1,0 +1,12 @@
+{
+  "name": "Yamero",
+  "version": "1.0.0",
+  "description": "An app which helps everyinw being sane.",
+  "main": "index.js",
+  "author": "Chandrakant",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mongoose": "^6.0.12"
+  }
+}
