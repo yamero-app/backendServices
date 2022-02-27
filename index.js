@@ -3,7 +3,8 @@ const port = process.env.port || 3000;
 const mongoose = require("mongoose");
 const config = require("./creds").creds;
 const app = express();
-const userRoutes = require("");
+const cookieParser = require("cookie-parser");
+const userRoutes = require("./routes/userRoutes");
 const auth = require("./creds").auth;
 
 mongoose.connect(config.dbLink);
@@ -15,7 +16,12 @@ mongoose.connection.on("error", (error) => {
   console.log(error);
 });
 
+app.use(express.json());
+app.use(cookieParser());
+
+//
 app.use(function (req, res, next) {
+  console.log(req.headers);
   res.setHeader("Access-Control-Allow-Origin", "z");
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
@@ -23,16 +29,17 @@ app.use(function (req, res, next) {
     "authorization,userauth,Origin, X-Requested-With, Content-Type, Accept"
   );
 
-  if (auth.checkAuth(req.headers.authorization != 1){
+  if (auth.checkAuth(req.headers.authorization != 1)) {
     res.status(401);
     res.json({
-      status : "Forbidden",
-      message: "Authorization Missing"
-    })
+      status: "Forbidden",
+      message: "Authorization Missing",
+    });
   }
 });
 
-app.use("/api_v1/user", userRoutes);
+//
+//app.use("/api_v1/user", userRoutes);
 
 app.listen(port, function () {
   console.log("app is listing on " + port);
