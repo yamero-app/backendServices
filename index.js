@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/userRoutes");
 const auth = require("./config/auth");
 
+// Database connections
 mongoose.connect(config.dbLink);
 
 mongoose.connection.on("connected", () => {
@@ -16,10 +17,11 @@ mongoose.connection.on("error", (error) => {
   console.log(error);
 });
 
+// Including important imp libraries
 app.use(express.json());
 app.use(cookieParser());
 
-//
+// setting headers and checking authorization
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "z");
   res.header("Access-Control-Allow-Origin", "*");
