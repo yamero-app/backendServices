@@ -6,6 +6,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const userRoutes = require("./routes/userRoutes");
 const auth = require("./config/auth");
+const authRoutes = require("./routes/authRoutes");
 
 // Database connections
 mongoose.connect(config.dbLink);
@@ -51,13 +52,13 @@ app.use(function (req, res, next) {
   }
 });
 
-app.get("/one", (req, res) => {
-  res.status(200);
-  res.json("YO YO ");
-});
+// app.get("/one", (req, res) => {
+//   res.status(200);
+//   res.json("YO YO ");
+// });
 
 //
-//app.use("/api_v1/user", userRoutes);
+app.use("/auth", authRoutes);
 
 app.listen(port, function () {
   console.log("app is listing on " + port);

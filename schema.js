@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
-  _id: Schema.Types.ObjectId,
+  id: String,
   emailId: String,
   name: String,
   phoneNumber: String,
-  gender: String,
+  gender: Number,
   dob: Date,
   city: String,
   country: String,
