@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const userSchema = new Schema({
@@ -17,7 +17,7 @@ const userSchema = new Schema({
   topics: Schema.Types.Mixed,
   about: String,
   organization: String,
-  question: [{ type: Schema.Types.ObjectId, ref: "Question" }],
+  question: [{ type: Schema.Types.ObjectId, ref: "Question" }], // for filling data in place of IDs
   deleted: Boolean,
   givenAnswers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
 });
@@ -39,7 +39,5 @@ const answerSchema = new Schema({
   _id: Schema.Types.ObjectId,
 });
 
-const UserModel = mongoose.model("Users", userSchema);
-const QModel = mongoose.model("Question", questionSchema);
-
-export { UserModel, QModel };
+module.exports.UserModel = mongoose.model("Users", userSchema);
+module.exports.QModel = mongoose.model("Question", questionSchema);

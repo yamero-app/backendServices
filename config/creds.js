@@ -3,7 +3,7 @@ const creds = {
   db: {
     userName: "",
     password: "",
-    dbName: "",
+    dbName: "yamero",
   },
   Oauth: {
     clientId:

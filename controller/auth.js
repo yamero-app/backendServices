@@ -1,6 +1,7 @@
 const { OAuth2Client } = require("google-auth-library");
 const cred = require("../config/creds").creds;
 const client = new OAuth2Client(cred.Oauth.clientId);
+const authModel = require("../models/userModel");
 
 //function to verify token
 async function verify(token) {
@@ -34,13 +35,46 @@ module.exports.login = function (req, res) {
   }
   const user = {};
   verify(idToken)
-    .then((doc) => {
-      return res.json({
-        ans: doc,
-      });
+    .then(async (doc) => {
+      let data = {
+        id: doc.sub,
+        email: doc.email,
+        name: doc.name,
+        picture: doc.picture,
+      };
+
+      //checking whether user is in db or not
+      let initResponse = await authModel.checkDb(doc.sub);
+
+      //if not
+      if (initResponse == []) {
+        let response = authModel.login(data);
+
+        if (response == true) {
+          res.cookie("session-token", idToken);
+          res.status(200);
+          return res.json({
+            status: 200,
+            message: "User logged in",
+          });
+        } else {
+          res.status(500);
+          return res.json({
+            status: 500,
+            message: "Internal error occured",
+          });
+        }
+      } else {
+        //if there in db
+        res.cookie("session-token", idToken);
+        res.status(200);
+        return res.json({
+          status: 200,
+          message: "User logged in",
+        });
+      }
     })
     .catch((err) => {
-      console.log("error");
       res.status(200);
       return res.json({
         status: 200,

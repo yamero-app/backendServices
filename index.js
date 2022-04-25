@@ -30,8 +30,6 @@ app.use(function (req, res, next) {
     "Access-Control-Allow-Headers",
     "authorization,userauth,Origin, X-Requested-With, Content-Type, Accept"
   );
-  console.log("jjjjjjj");
-  console.log(auth);
 
   if (!req.headers.authorization) {
     res.status(400);
@@ -52,12 +50,6 @@ app.use(function (req, res, next) {
   }
 });
 
-// app.get("/one", (req, res) => {
-//   res.status(200);
-//   res.json("YO YO ");
-// });
-
-//
 app.use("/auth", authRoutes);
 
 app.listen(port, function () {
