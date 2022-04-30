@@ -26,12 +26,13 @@ const userSchema = new Schema({
 const questionSchema = new Schema({
   _id: Schema.Types.ObjectId,
   question: String,
+  askedBy: String,
   likes: Number,
   imageAllowed: Boolean,
+  image: String,
+  code: String,
   codeAllowed: Boolean,
-  answers: {
-    answerId: { type: Schema.Types.ObjectId, ref: "Answer" },
-  },
+  answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
   date: { type: Date, default: Date.now },
 });
 
