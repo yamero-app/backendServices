@@ -11,7 +11,7 @@ const userSchema = new Schema({
   city: String,
   country: String,
   anonName: String,
-  gansos: Number,
+  likes: Number,
   pfp: String,
   cover: String,
   topics: Schema.Types.Mixed,
@@ -24,21 +24,35 @@ const userSchema = new Schema({
 //some changes while making DB
 
 const questionSchema = new Schema({
-  _id: Schema.Types.ObjectId,
   question: String,
   askedBy: String,
-  likes: Number,
+  likes: Schema.Types.Number,
   imageAllowed: Boolean,
   image: String,
   code: String,
   codeAllowed: Boolean,
+  topic: { type: mongoose.Schema.ObjectId, ref: "Topic" },
   answers: [{ type: Schema.Types.ObjectId, ref: "Answer" }],
   date: { type: Date, default: Date.now },
 });
 
-const answerSchema = new Schema({
-  _id: Schema.Types.ObjectId,
+const TopicSchema = new Schema({
+  name: { type: String, required: true },
+  about: { type: String, required: true },
+  subscribers: [{ type: mongoose.Schema.ObjectId, ref: "UserModel" }],
+  posts: [{ type: mongoose.Schema.ObjectId, ref: "Question" }],
+});
+
+const AnswerSchema = new Schema({
+  answeredBy: String,
+  QuestionId: String,
+  public: Boolean,
+  pic: String,
+  content: String,
+  Liked: Number,
 });
 
 module.exports.UserModel = mongoose.model("Users", userSchema);
 module.exports.QModel = mongoose.model("Question", questionSchema);
+module.exports.TopicModel = mongoose.model("Topic", TopicSchema);
+module.exports.AnswerModel = mongoose.model("Answer", AnswerSchema);

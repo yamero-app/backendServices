@@ -4,9 +4,9 @@ const mongoose = require("mongoose");
 const config = require("./creds").creds;
 const app = express();
 const cookieParser = require("cookie-parser");
-const userRoutes = require("./routes/userRoutes");
 const auth = require("./config/auth");
 const authRoutes = require("./routes/authRoutes");
+const serviceRoutes = require("./routes/serviceRoutes");
 
 // Database connections
 mongoose.connect(config.dbLink);
@@ -33,6 +33,7 @@ app.use(function (req, res, next) {
 
   if (!req.headers.authorization) {
     res.status(400);
+    console.log("check");
     res.json({
       status: "Forbidden",
       message: "Authorization Missing",
@@ -51,6 +52,7 @@ app.use(function (req, res, next) {
 });
 
 app.use("/auth", authRoutes);
+app.use("/features", serviceRoutes);
 
 app.listen(port, function () {
   console.log("app is listing on " + port);
