@@ -11,7 +11,6 @@ const userSchema = new Schema({
   city: String,
   country: String,
   anonName: String,
-  likes: Number,
   pfp: String,
   cover: String,
   topics: Schema.Types.Mixed,

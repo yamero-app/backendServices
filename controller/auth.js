@@ -41,15 +41,18 @@ module.exports.login = function (req, res) {
         email: doc.email,
         name: doc.name,
         picture: doc.picture,
+        phoneNumber: "",
+        gender: 3,
+        city: "",
+        country: "",
+        anonName: "",
       };
-
       //checking whether user is in db or not
       let initResponse = await authModel.checkDb(doc.sub);
 
       //if not
-      if (initResponse == []) {
-        let response = authModel.login(data);
-
+      if (initResponse.length == 0) {
+        let response = await authModel.createUser(data);
         if (response == true) {
           res.cookie("session-token", idToken);
           res.status(200);
@@ -66,6 +69,7 @@ module.exports.login = function (req, res) {
         }
       } else {
         //if there in db
+        console.log("Checking here");
         res.cookie("session-token", idToken);
         res.status(200);
         return res.json({

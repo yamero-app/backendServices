@@ -14,21 +14,27 @@ module.exports.checkDb = function (data) {
 };
 
 // model to create a user document
-module.exports.login = function (data) {
+module.exports.createUser = function (data) {
   return new Promise(function (resolve, reject) {
+    console.log(data);
     let msg = UserModel.create(
       {
         id: data.id,
         emailId: data.email,
         name: data.name,
-        anonName: String,
-        gansos: 0,
+        anonName: data.anonName,
         pfp: data.picture,
+        phoneNumber: data.phoneNumber,
+        gender: data.gender,
+        city: data.city,
+        country: data.country,
       },
-      function (err, msg) {
+      function (err, msg2) {
         if (err) {
+          console.log(err);
           reject(err);
         } else {
+          console.log(msg2);
           resolve(true);
         }
       }
