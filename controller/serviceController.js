@@ -19,7 +19,6 @@ async function verify(token) {
 }
 
 //API to add new question
-
 module.exports.newQuestion = function (req, res) {
   let idToken = req.cookies["session-token"];
 
@@ -74,7 +73,6 @@ module.exports.newQuestion = function (req, res) {
 };
 
 //API to get profile
-
 module.exports.getProfile = function (req, res) {
   let idToken = req.cookies["session-token"];
 
@@ -204,4 +202,86 @@ module.exports.MyQuestions = function (req, res) {
     });
 };
 
-// API to add answers
+// API to get all My answers
+module.exports.MyAnswers = function (req, res) {
+  let idToken = req.cookies["session-token"];
+
+  verify(idToken)
+    .then(async (doc) => {
+      let data = doc.sub;
+      let response = await ServiceModel.MyAnswers(data);
+      if (response.length == 0) {
+        res.status(200);
+        return res.json({
+          status: 200,
+          message: "No Questions.",
+        });
+      } else {
+        res.status(200);
+        return res.json({
+          status: 200,
+          message: "Answers Fetched.",
+          questions: response,
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(200);
+      return res.json({
+        status: 200,
+        message: "Wrong Id token",
+      });
+    });
+};
+
+// API to add answer
+module.exports.newAnswer = function (req, res) {
+  let idToken = req.cookies["session-token"];
+
+  if (!req.body.answer || !req.body.questionId) {
+    res.status(400);
+    return res.json({
+      status: 400,
+      message: "Body not given or Question Id not given ",
+    });
+  }
+
+  verify(idToken)
+    .then(async (doc) => {
+      //checking whether user is in db or not
+      let initResponse = await authModel.checkDb(doc.sub);
+
+      if (initResponse != []) {
+        let answerData = {
+          answeredBy: doc.sub,
+          QuestionId: req.body.questionId,
+          public: false,
+          pic: "",
+          content: req.body.answer,
+          Liked: 0,
+        };
+        //Putting Answer in DB
+        let response = await ServiceModel.addAnswers(answerData);
+        if (response == true) {
+          res.status(200);
+          return res.json({
+            status: 200,
+            message: "Answer added succesfully.",
+          });
+        } else {
+          res.status(500);
+          return res.json({
+            status: 500,
+            message: "Internal Error Occured,Answer not added.",
+          });
+        }
+      }
+    })
+    .catch((err) => {
+      res.status(200);
+      return res.json({
+        status: 200,
+        message: "Wrong Id token",
+      });
+    });
+};
