@@ -80,7 +80,6 @@ module.exports.getProfile = function (req, res) {
     .then(async (doc) => {
       //checking whether user is in db or not
       let response = await authModel.checkDb(doc.sub);
-      console.log(response);
       if (response != []) {
         res.status(200);
         return res.json({
@@ -121,7 +120,6 @@ module.exports.updateProfile = function (req, res) {
     .then(async (doc) => {
       //checking whether user is in db or not
       let response = await authModel.checkDb(doc.sub);
-      console.log(doc.sub);
       if (response != []) {
         let filter = {
           id: doc.sub,
@@ -140,7 +138,6 @@ module.exports.updateProfile = function (req, res) {
 
         let response2 = await ServiceModel.updateProfile(filter, data);
         if (response2 == true) {
-          console.log(response2);
           res.status(200);
           return res.json({
             status: 200,
@@ -234,7 +231,58 @@ module.exports.MyAnswers = function (req, res) {
     });
 };
 
-// API to add answer
+// API to add answer  (Working)
+// module.exports.newAnswer = function (req, res) {
+//   let idToken = req.cookies["session-token"];
+
+//   if (!req.body.answer || !req.body.questionId) {
+//     res.status(400);
+//     return res.json({
+//       status: 400,
+//       message: "Body not given or Question Id not given ",
+//     });
+//   }
+
+//   verify(idToken)
+//     .then(async (doc) => {
+//       //checking whether user is in db or not
+//       let initResponse = await authModel.checkDb(doc.sub);
+
+//       if (initResponse != []) {
+//         let answerData = {
+//           answeredBy: doc.sub,
+//           QuestionId: req.body.questionId,
+//           public: false,
+//           pic: "",
+//           content: req.body.answer,
+//           Liked: 0,
+//         };
+//         //Putting Answer in DB
+//         let response = await ServiceModel.addAnswers(answerData);
+//         if (response == true) {
+//           res.status(200);
+//           return res.json({
+//             status: 200,
+//             message: "Answer added succesfully.",
+//           });
+//         } else {
+//           res.status(500);
+//           return res.json({
+//             status: 500,
+//             message: "Internal Error Occured,Answer not added.",
+//           });
+//         }
+//       }
+//     })
+//     .catch((err) => {
+//       res.status(200);
+//       return res.json({
+//         status: 200,
+//         message: "Wrong Id token",
+//       });
+//     });
+// };
+
 module.exports.newAnswer = function (req, res) {
   let idToken = req.cookies["session-token"];
 
@@ -262,12 +310,26 @@ module.exports.newAnswer = function (req, res) {
         };
         //Putting Answer in DB
         let response = await ServiceModel.addAnswers(answerData);
-        if (response == true) {
-          res.status(200);
-          return res.json({
-            status: 200,
-            message: "Answer added succesfully.",
-          });
+        if (response.length != 0) {
+          data2 = {
+            questionId: response.QuestionId,
+            _id: response._id,
+          };
+
+          let response2 = await ServiceModel.addAnswerIdQuestionSchema(data2);
+          if (response2) {
+            res.status(200);
+            return res.json({
+              status: 200,
+              message: "Answer added succesfully.",
+            });
+          } else {
+            res.status(500);
+            return res.json({
+              status: 500,
+              message: "Internal Error Occured,Answer not added.",
+            });
+          }
         } else {
           res.status(500);
           return res.json({
@@ -275,6 +337,41 @@ module.exports.newAnswer = function (req, res) {
             message: "Internal Error Occured,Answer not added.",
           });
         }
+      }
+    })
+    .catch((err) => {
+      res.status(200);
+      return res.json({
+        status: 200,
+        message: "Wrong Id token",
+      });
+    });
+};
+
+//API for feed
+module.exports.feed = function (req, res) {
+  let idToken = req.cookies["session-token"];
+
+  verify(idToken)
+    .then(async (doc) => {
+      //checking whether user is in db or not
+      let response = await authModel.checkDb(doc.sub);
+      if (response != []) {
+        let response2 = await ServiceModel.feed();
+        if (response2.length != 0) {
+          res.status(200);
+          return res.json({
+            status: 200,
+            message: "Questions fetched",
+            Questions: response2,
+          });
+        }
+      } else {
+        res.status(500);
+        return res.json({
+          status: 500,
+          message: "Internal Error Occured.",
+        });
       }
     })
     .catch((err) => {

@@ -19,4 +19,7 @@ router.route("/myAnswers").get(serviceController.MyAnswers);
 //Route to add new Answer    (POST)
 router.route("/newAnswer").post(serviceController.newAnswer);
 
+//Route to get all questions (GET)
+router.route("/feed").get(serviceController.feed);
+
 module.exports = router;

@@ -67,8 +67,45 @@ module.exports.addAnswers = function (data) {
       if (err) {
         reject(err);
       } else {
-        resolve(true);
+        resolve(msg);
       }
+    });
+  });
+};
+
+module.exports.addAnswerIdQuestionSchema = function (data) {
+  return new Promise(function (resolve, reject) {
+    let doc = QuestionModel.findOneAndUpdate(
+      { id: data.questionId },
+      { $push: { answers: data._id } },
+      null,
+      function (err, docs) {
+        if (err) {
+          reject(err);
+        } else {
+          QuestionModel.findOne({ id: data.questionId })
+            .populate("answers")
+            .exec(function (err, doc) {
+              if (err) {
+                resolve(false);
+              } else {
+                resolve(true);
+              }
+            });
+          resolve(true);
+        }
+      }
+    );
+  });
+};
+
+//MOdel for feed
+module.exports.feed = function () {
+  return new Promise(function (resolve, reject) {
+    QuestionModel.find({}, function (err, ques) {
+      if (err) {
+        reject(false);
+      } else resolve(ques);
     });
   });
 };

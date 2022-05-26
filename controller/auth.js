@@ -24,6 +24,7 @@ async function verify(token) {
 //   .catch(console.error);
 
 module.exports.login = function (req, res) {
+  console.log(req.headers);
   let idToken = req.body.idToken;
 
   if (!idToken) {
