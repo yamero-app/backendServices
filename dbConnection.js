@@ -1,4 +1,4 @@
 const mongoose = require("mongoose");
-const connectionLink = require("./creds").creds.dbLink;
+require('dotenv').config();
 
-let con = mongoose.connect(connectionLink);
+let con = mongoose.connect(process.env.DB_LINK);

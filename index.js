@@ -1,19 +1,24 @@
 const express = require("express");
-const port = process.env.port || 3001;
-const mongoose = require("mongoose");
-const config = require("./creds").creds;
 const app = express();
-const cookieParser = require("cookie-parser");
+
+const mongoose = require("mongoose");
+
+require('dotenv').config();
 const auth = require("./config/auth");
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./routes/authRoutes");
 const serviceRoutes = require("./routes/serviceRoutes");
 
+// Port declaration
+const port = process.env.port || 3001;
+
 // Database connections
-mongoose.connect(config.dbLink);
+mongoose.connect(process.env.DB_LINK);
 
 mongoose.connection.on("connected", () => {
   console.log("Connected to MongoDB");
 });
+
 mongoose.connection.on("error", (error) => {
   console.log(error);
 });
@@ -54,6 +59,7 @@ app.use(function (req, res, next) {
 app.use("/auth", authRoutes);
 app.use("/features", serviceRoutes);
 
-app.listen(port, function () {
-  console.log("app is listing on " + port);
+// Running the server on given PORT
+app.listen(port, () => {
+  console.log("app is listing on", port);
 });

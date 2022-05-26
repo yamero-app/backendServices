@@ -1,5 +1,5 @@
 const QuestionModel = require("../schema").QModel;
-const UserModel = require("../schema0").UserModel;
+const UserModel = require("../schema").UserModel;
 
 module.exports.addQuestion = function (data) {
   return new Promise(function (resolve, reject) {

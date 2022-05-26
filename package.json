@@ -1,15 +1,20 @@
 {
-  "name": "Yamero",
-  "version": "1.0.0",
-  "description": "An app which helps everyone being sane.",
+  "name": "yamero",
+  "version": "0.1",
+  "description": "An app which helps everyone being sane // except its buidlers.",
   "main": "index.js",
   "author": "Chandrakant",
   "license": "MIT",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
   "dependencies": {
     "cookie-parser": "^1.4.6",
+    "dotenv": "^16.0.1",
     "express": "^4.17.1",
     "google-auth-library": "^8.0.0",
     "mongoose": "^6.1.7",
-    "nodemon": "^2.0.15"
+    "nodemon": "^2.0.16"
   }
 }
