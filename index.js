@@ -6,6 +6,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 const auth = require("./config/auth");
 const authRoutes = require("./routes/authRoutes");
+const authRoutes2 = require("./routes/authRoute2");
 const serviceRoutes = require("./routes/serviceRoutes");
 
 // Database connections
@@ -53,6 +54,7 @@ app.use(function (req, res, next) {
 
 app.use("/auth", authRoutes);
 app.use("/features", serviceRoutes);
+app.use("/authNew", authRoutes2);
 
 app.listen(port, function () {
   console.log("app is listing on " + port);
